@@ -37,7 +37,7 @@ const AddProductForm: React.FC<Props> = ({ onSuccess, onCancel }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await api.post('http://localhost:8080/api/add/products', formData, {
+      await api.post('/add/products', formData, {
         headers: {Authorization: `Bearer ${token}`},
       });
       onSuccess(); // Refresh list

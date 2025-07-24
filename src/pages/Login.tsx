@@ -11,7 +11,7 @@ const Login: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
-    console.log("login pagr", import.meta.env.VITE_API_URL)
+    console.log("login page", import.meta.env.VITE_API_URL)
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
