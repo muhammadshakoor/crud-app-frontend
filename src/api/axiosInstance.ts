@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  // baseURL: 'http://localhost:8080/api',
+  baseURL: 'crud-app-backend-sepia.vercel.app/api',
 });
 
 api.interceptors.request.use(config => {
