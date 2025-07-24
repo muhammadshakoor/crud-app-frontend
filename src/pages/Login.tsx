@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import api from '../api/axiosInstance';
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -10,12 +11,13 @@ const Login: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
+    console.log("login pagr", import.meta.env.VITE_API_URL)
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await axios.post('http://localhost:8080/api/auth/login', { username, password });
+            const res = await api.post('/auth/login', { username, password });
             login(res.data.token, res.data.role, username);
             navigate('/');
         } catch (error: unknown) {
