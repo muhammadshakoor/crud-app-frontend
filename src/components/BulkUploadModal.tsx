@@ -93,7 +93,11 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            {/* <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"> */}
+                <div
+                    ref={modalRef}
+                    className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+                >
                 <h2 className="text-xl font-bold mb-4">Bulk Upload Products</h2>
                 <input
                     type="file"
