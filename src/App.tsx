@@ -61,14 +61,61 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import NotAuthorized from './pages/NotAuthorized';
 import Dashboard from './pages/Dashboard';
+import { useState, useRef } from 'react';
 
 function App() {
+  const [sidebarWidth, setSidebarWidth] = useState(64); // Default width in pixels (4rem = 64px)
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (isDragging && dragRef.current && sidebarRef.current) {
+      const newWidth = e.clientX - sidebarRef.current.getBoundingClientRect().left;
+      if (newWidth > 50 && newWidth < 300) { // Constrain width between 50px and 300px
+        setSidebarWidth(newWidth);
+      }
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Add event listeners when component mounts and clean up when unmounts
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    } else {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
   return (
     <AuthProvider>
       <Router>
         <div className="flex min-h-screen bg-gray-100">
-          {/* Fixed Sidebar */}
-          <div className="w-64 bg-teal-700 text-white p-4 fixed h-full overflow-y-auto">
+          {/* Draggable Sidebar */}
+          <div
+            ref={sidebarRef}
+            className="bg-teal-700 text-white p-4 fixed h-full overflow-y-auto transition-all duration-300"
+            style={{ width: `${sidebarWidth}px` }}
+          >
+            <div
+              ref={dragRef}
+              onMouseDown={handleMouseDown}
+              className="absolute right-0 top-0 w-2 h-full cursor-col-resize bg-teal-800 hover:bg-teal-600"
+            />
             <nav>
               <ul className="space-y-2">
                 <li>
@@ -96,11 +143,11 @@ function App() {
           </div>
 
           {/* Main Content with Margin for Fixed Sidebar */}
-          <div className="flex-1 ml-64 p-4">
-            <header className="bg-blue-600 text-white p-4 fixed top-0 left-64 right-0 z-10 flex justify-between items-center rounded-none">
+          <div className="flex-1" style={{ marginLeft: `${sidebarWidth}px` }}>
+            <header className="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-10 flex justify-between items-center rounded-none">
               <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
             </header>
-            <main className="container mx-auto p-4 pt-16 max-w-[90vw]">
+            <main className="container mx-auto p-4 pt-16 max-w-[90vw]" style={{ marginLeft: `${sidebarWidth}px` }}>
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
