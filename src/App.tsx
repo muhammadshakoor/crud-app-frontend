@@ -54,7 +54,6 @@
 // export default App;
 
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import { useState } from 'react';
 import { AuthProvider } from './auth/AuthContext';
 import ProtectedRoute from './auth/ProtectedRoute';
 import ProductList from './components/ProductList';
@@ -62,23 +61,16 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import NotAuthorized from './pages/NotAuthorized';
 import Dashboard from './pages/Dashboard';
-import { Menu } from 'lucide-react';
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
   return (
     <AuthProvider>
       <Router>
         <div className="flex min-h-screen bg-gray-100">
-          {/* Sidebar */}
-          <div
-            className={`bg-teal-700 text-white p-4 fixed h-full overflow-y-auto z-20 transform transition-transform duration-300 ease-in-out
-              ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-              w-64 lg:translate-x-0 lg:static lg:block`}
-          >
+          {/* Fixed Sidebar */}
+          <div className="w-64 bg-teal-700 text-white p-4 fixed h-full overflow-y-auto">
             <nav>
-              <ul className="space-y-2 mt-12 lg:mt-0">
+              <ul className="space-y-2">
                 <li>
                   <NavLink
                     to="/dashboard"
@@ -103,32 +95,16 @@ function App() {
             </nav>
           </div>
 
-          {/* Main Content */}
-          <div className="flex-1 lg:ml-64 p-4 w-full">
-            {/* Header */}
-            <header className="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-10 flex justify-between items-center lg:left-64">
-              <button
-                className="lg:hidden text-white"
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-              >
-                <Menu size={28} />
-              </button>
-              <h1 className="text-2xl font-bold text-yellow-400 mx-auto lg:mx-0">Product Management</h1>
+          {/* Main Content with Margin for Fixed Sidebar */}
+          <div className="flex-1 ml-64 p-4">
+            <header className="bg-blue-600 text-white p-4 fixed top-0 left-64 right-0 z-10 flex justify-between items-center rounded-none">
+              <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
             </header>
-
-            {/* Main Section */}
-            <main className="container mx-auto p-4 pt-20 max-w-[95vw]">
+            <main className="container mx-auto p-4 pt-16 max-w-[90vw]">
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute allowedRoles={['admin', 'user']}>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
+                <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['admin', 'user']}><Dashboard /></ProtectedRoute>} />
                 <Route
                   path="/"
                   element={
