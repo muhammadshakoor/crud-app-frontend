@@ -99,11 +99,6 @@ function App() {
           <div className="flex-1 ml-64 p-4">
             <header className="bg-blue-600 text-white p-4 flex justify-between items-center mb-4 rounded">
               <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
-              <div className="flex space-x-2">
-                <button className="bg-green-600 text-white px-4 py-2 rounded">Bulk Create</button>
-                <button className="bg-purple-600 text-white px-4 py-2 rounded">Export All Barcodes</button>
-                <button className="bg-red-600 text-white px-4 py-2 rounded">Logout</button>
-              </div>
             </header>
             <main className="container mx-auto p-4 max-w-[95vw]">
               <Routes>
