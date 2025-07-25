@@ -12,14 +12,14 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const { token } = useAuth();
-    //Handle click outside
+    // Handle click outside
     const modalRef = useRef<HTMLDivElement>(null);
 
-    // Handle click outside
+    // Handle click outside to close modal
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                onClose();
+                onClose(); // Close modal when clicking outside
             }
         };
 
@@ -29,12 +29,14 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
         };
     }, [onClose]);
 
+    // Handle file selection
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
             setFile(e.target.files[0]);
         }
     };
 
+    // Handle file upload and processing
     const handleUpload = async () => {
         if (!file) {
             alert('Please select an Excel file');
@@ -46,12 +48,11 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
             const data = await file.arrayBuffer();
             const workbook = XLSX.read(data, { type: 'array' });
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-            //   const jsonData = XLSX.utils.sheet_to_json(worksheet);
             const rawData = XLSX.utils.sheet_to_json<any>(worksheet);
 
             // Clean & validate each row
             const cleanedData = rawData
-                .filter((item) => item.name && item.sale_price) // require essential fields
+                .filter((item) => item.name && item.sale_price) // Require essential fields
                 .map((item) => ({
                     name: item.name?.toString().trim(),
                     description: item.description?.toString().trim() || '',
@@ -70,8 +71,6 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
                 alert('No valid products found in file.');
                 return;
             }
-
-
 
             // POST to backend
             await api.post('/bulk-create/products', cleanedData, {
@@ -93,11 +92,10 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-            {/* <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"> */}
-                <div
-                    ref={modalRef}
-                    className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
-                >
+            <div
+                ref={modalRef} // Applied to main modal container for accurate click-outside detection
+                className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+            >
                 <h2 className="text-xl font-bold mb-4">Bulk Upload Products</h2>
                 <input
                     type="file"
