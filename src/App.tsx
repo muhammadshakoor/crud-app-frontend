@@ -105,11 +105,16 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="flex min-h-screen bg-gray-100">
-          {/* Draggable Sidebar */}
+          {/* Fixed Header */}
+          <header className="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-30 flex justify-between items-center rounded-none">
+            <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
+          </header>
+
+          {/* Draggable Sidebar (starts under header) */}
           <div
             ref={sidebarRef}
-            className="bg-teal-700 text-white p-4 fixed h-full overflow-y-auto transition-all duration-300 z-20"
-            style={{ width: `${sidebarWidth}px` }}
+            className="bg-teal-700 text-white p-4 fixed h-[calc(100vh-64px)] overflow-y-auto transition-all duration-300 z-20"
+            style={{ width: `${sidebarWidth}px`, top: '64px' }} // Starts below header (64px height approx)
           >
             <div
               ref={dragRef}
@@ -142,14 +147,9 @@ function App() {
             </nav>
           </div>
 
-          {/* Fixed Header */}
-          <div className="flex-1" style={{ marginLeft: `${sidebarWidth}px` }}>
-            <header className="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-30 flex justify-between items-center rounded-none">
-              <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
-            </header>
-
-            {/* Main Content with Adjusted Padding */}
-            <main className="container mx-auto p-4 pt-20 max-w-[90vw]" style={{ marginLeft: `${sidebarWidth}px` }}>
+          {/* Main Content (starts after sidebar) */}
+          <div className="flex-1" style={{ marginLeft: `${sidebarWidth}px`, marginTop: '64px' }}>
+            <main className="container mx-auto p-4 max-w-[90vw]" style={{ marginLeft: `${sidebarWidth}px` }}>
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
