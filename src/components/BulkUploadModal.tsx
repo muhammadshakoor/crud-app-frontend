@@ -12,14 +12,18 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
     const [file, setFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const { token } = useAuth();
-    // Handle click outside
     const modalRef = useRef<HTMLDivElement>(null);
 
     // Handle click outside to close modal
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
-                onClose(); // Close modal when clicking outside
+            // Only close if not uploading and click is outside modalRef
+            if (
+                !uploading &&
+                modalRef.current &&
+                !modalRef.current.contains(event.target as Node)
+            ) {
+                onClose();
             }
         };
 
@@ -27,7 +31,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [onClose]);
+    }, [onClose, uploading]); // Added uploading to dependencies
 
     // Handle file selection
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +97,7 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
     return (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
             <div
-                ref={modalRef} // Applied to main modal container for accurate click-outside detection
+                ref={modalRef}
                 className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
             >
                 <h2 className="text-xl font-bold mb-4">Bulk Upload Products</h2>
@@ -101,18 +105,18 @@ const BulkUploadModal: React.FC<BulkUploadModalProps> = ({ onClose, onSuccess })
                     type="file"
                     accept=".xlsx"
                     onChange={handleFileChange}
-                    className="mb-4"
+                    className="mb-4 w-full"
                 />
                 <div className="flex justify-end gap-3">
                     <button
-                        className="bg-gray-300 px-4 py-2 rounded"
+                        className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 disabled:opacity-50"
                         onClick={onClose}
                         disabled={uploading}
                     >
                         Cancel
                     </button>
                     <button
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
                         onClick={handleUpload}
                         disabled={uploading}
                     >
