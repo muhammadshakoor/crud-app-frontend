@@ -61,41 +61,21 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import NotAuthorized from './pages/NotAuthorized';
 import Dashboard from './pages/Dashboard';
-import { useState } from 'react';
 
 function App() {
-  const [sidebarWidth, setSidebarWidth] = useState(64); // Default width in pixels (4rem = 64px)
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-    setSidebarWidth(isCollapsed ? 64 : 0); // Toggle between 64px and 0px
-  };
-
   return (
     <AuthProvider>
       <Router>
         <div className="flex min-h-screen bg-gray-100">
-          {/* Responsive Sidebar */}
-          <div
-            className={`bg-purple-700 text-white p-4 fixed h-full transition-all duration-300 overflow-y-auto ${
-              isCollapsed ? 'w-0' : 'w-64'
-            }`}
-            style={{ width: `${sidebarWidth}px` }}
-          >
-            <button
-              onClick={toggleSidebar}
-              className="absolute top-2 right-2 text-white hover:text-gray-300"
-            >
-              {isCollapsed ? '►' : '◄'}
-            </button>
+          {/* Fixed Sidebar */}
+          <div className="w-64 bg-teal-700 text-white p-4 fixed h-full overflow-y-auto">
             <nav>
-              <ul className="space-y-2 mt-8">
+              <ul className="space-y-2">
                 <li>
                   <NavLink
                     to="/dashboard"
                     className={({ isActive }) =>
-                      `flex items-center p-2 rounded hover:bg-purple-600 ${isActive ? 'bg-purple-800' : ''}`
+                      `flex items-center p-2 rounded hover:bg-teal-600 ${isActive ? 'bg-teal-800' : ''}`
                     }
                   >
                     <span className="mr-2">📊</span> Dashboard
@@ -105,7 +85,7 @@ function App() {
                   <NavLink
                     to="/"
                     className={({ isActive }) =>
-                      `flex items-center p-2 rounded hover:bg-purple-600 ${isActive ? 'bg-purple-800' : ''}`
+                      `flex items-center p-2 rounded hover:bg-teal-600 ${isActive ? 'bg-teal-800' : ''}`
                     }
                   >
                     <span className="mr-2">📦</span> Products Inventory
@@ -115,19 +95,12 @@ function App() {
             </nav>
           </div>
 
-          {/* Fixed Header */}
-          <div className="flex-1" style={{ marginLeft: `${sidebarWidth}px` }}>
-            <header className="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-10 flex justify-between items-center rounded-none">
+          {/* Main Content with Margin for Fixed Sidebar */}
+          <div className="flex-1 ml-64 p-4">
+            <header className="bg-blue-600 text-white p-4 fixed top-0 left-64 right-0 z-10 flex justify-between items-center rounded-none">
               <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
-              <div className="flex space-x-2">
-                <button className="bg-green-600 text-white px-4 py-2 rounded">Bulk Create</button>
-                <button className="bg-purple-600 text-white px-4 py-2 rounded">Export All Barcodes</button>
-                <button className="bg-red-600 text-white px-4 py-2 rounded">Logout</button>
-              </div>
             </header>
-
-            {/* Main Content with Padding for Fixed Header */}
-            <main className="container mx-auto p-4 pt-16 max-w-[95vw]" style={{ marginLeft: `${sidebarWidth}px` }}>
+            <main className="container mx-auto p-4 pt-16 max-w-[90vw]">
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
