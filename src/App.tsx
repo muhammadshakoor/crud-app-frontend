@@ -108,7 +108,7 @@ function App() {
           {/* Draggable Sidebar */}
           <div
             ref={sidebarRef}
-            className="bg-teal-700 text-white p-4 fixed h-full overflow-y-auto transition-all duration-300"
+            className="bg-teal-700 text-white p-4 fixed h-full overflow-y-auto transition-all duration-300 z-20"
             style={{ width: `${sidebarWidth}px` }}
           >
             <div
@@ -142,12 +142,14 @@ function App() {
             </nav>
           </div>
 
-          {/* Main Content with Margin for Fixed Sidebar */}
+          {/* Fixed Header */}
           <div className="flex-1" style={{ marginLeft: `${sidebarWidth}px` }}>
-            <header className="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-10 flex justify-between items-center rounded-none">
+            <header className="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-30 flex justify-between items-center rounded-none">
               <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
             </header>
-            <main className="container mx-auto p-4 pt-16 max-w-[90vw]" style={{ marginLeft: `${sidebarWidth}px` }}>
+
+            {/* Main Content with Adjusted Padding */}
+            <main className="container mx-auto p-4 pt-20 max-w-[90vw]" style={{ marginLeft: `${sidebarWidth}px` }}>
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
