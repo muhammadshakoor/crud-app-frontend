@@ -61,7 +61,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import NotAuthorized from './pages/NotAuthorized';
 import Dashboard from './pages/Dashboard';
-import { useState, useRef, useEffect } from 'react'; // Added useEffect import
+import { useState, useRef, useEffect } from 'react';
 
 function App() {
   const [sidebarWidth, setSidebarWidth] = useState(64); // Default width in pixels (4rem = 64px)
@@ -69,7 +69,7 @@ function App() {
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = () => {
     setIsDragging(true);
   };
 
