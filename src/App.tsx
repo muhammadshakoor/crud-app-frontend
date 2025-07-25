@@ -64,7 +64,7 @@ import Dashboard from './pages/Dashboard';
 import { useState, useRef, useEffect } from 'react';
 
 function App() {
-  const [sidebarWidth, setSidebarWidth] = useState(64); // Default width in pixels (4rem = 64px)
+  const [sidebarWidth, setSidebarWidth] = useState(220); // Default width in pixels (4rem = 64px)
   const sidebarRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
