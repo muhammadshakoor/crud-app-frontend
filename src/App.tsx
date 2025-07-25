@@ -97,10 +97,10 @@ function App() {
 
           {/* Main Content with Margin for Fixed Sidebar */}
           <div className="flex-1 ml-64 p-4">
-            <header className="bg-blue-600 text-white p-4 flex justify-between items-center mb-4 rounded">
+            <header className="bg-blue-600 text-white p-4 fixed top-0 left-64 right-0 z-10 flex justify-between items-center rounded-none">
               <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
             </header>
-            <main className="container mx-auto p-4 max-w-[95vw]">
+            <main className="container mx-auto p-4 pt-16 max-w-[95vw]">
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
