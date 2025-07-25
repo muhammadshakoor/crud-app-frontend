@@ -62,23 +62,14 @@ import Signup from './pages/Signup';
 import NotAuthorized from './pages/NotAuthorized';
 import Dashboard from './pages/Dashboard';
 import { useState } from 'react';
-import { useAuth } from './auth/AuthContext';
-import { useNavigate } from 'react-router-dom';
 
 function App() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
   const [sidebarWidth, setSidebarWidth] = useState(64); // Default width in pixels (4rem = 64px)
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
     setSidebarWidth(isCollapsed ? 64 : 0); // Toggle between 64px and 0px
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
   };
 
   return (
@@ -124,16 +115,15 @@ function App() {
             </nav>
           </div>
 
-          {/* Fixed Header with Logout Button */}
+          {/* Fixed Header */}
           <div className="flex-1" style={{ marginLeft: `${sidebarWidth}px` }}>
             <header className="bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-10 flex justify-between items-center rounded-none">
               <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 text-white px-4 py-2 rounded"
-              >
-                Logout
-              </button>
+              <div className="flex space-x-2">
+                <button className="bg-green-600 text-white px-4 py-2 rounded">Bulk Create</button>
+                <button className="bg-purple-600 text-white px-4 py-2 rounded">Export All Barcodes</button>
+                <button className="bg-red-600 text-white px-4 py-2 rounded">Logout</button>
+              </div>
             </header>
 
             {/* Main Content with Padding for Fixed Header */}
