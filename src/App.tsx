@@ -144,14 +144,12 @@ function App() {
 
           {/* Fixed Header (starts after sidebar, centered title) */}
           <div className="flex-1" style={{ marginLeft: `${sidebarWidth}px` }}>
-            <header className="bg-blue-600 text-white p-4 fixed top-0 z-30 flex justify-center items-center rounded-none" 
-                    style={<ins>marginLeft: `${sidebarWidth}px`, width: `calc(100% - ${sidebarWidth}px)`</ins><del>marginLeft: `${sidebarWidth}px`</del>}>
+            <header className="bg-blue-600 text-white p-4 fixed top-0 right-0 left-0 z-30 flex justify-center items-center rounded-none" style={{ marginLeft: `${sidebarWidth}px` }}>
               <h1 className="text-3xl font-bold text-yellow-400">Product Management</h1>
             </header>
 
-            {/* Main Content (width matches header, starts after sidebar) */}
-            <main className="container mx-auto p-4 pt-16" 
-                  style={<ins>marginLeft: `${sidebarWidth}px`, width: `calc(100% - ${sidebarWidth}px)`, maxWidth: `calc(100% - ${sidebarWidth}px)`</ins><del>marginLeft: `${sidebarWidth}px`, maxWidth: `calc(100% - ${sidebarWidth}px)`</del>}>
+            {/* Main Content (starts after sidebar) */}
+            <main className="container mx-auto p-4 pt-16 max-w-[90vw]" style={{ marginLeft: `${sidebarWidth}px` }}>
               <Routes>
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
