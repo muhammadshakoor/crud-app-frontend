@@ -6,13 +6,26 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import NotAuthorized from './pages/NotAuthorized';
 import Dashboard from './pages/Dashboard';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, } from 'react';
+import { useNavigate } from 'react-router-dom';      // ✅ Add this
+import { useAuth } from './auth/AuthContext';        // ✅ Add this
+
+
 
 function App() {
   const [sidebarWidth, setSidebarWidth] = useState(220); // Default width in pixels
   const [isDragging, setIsDragging] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
+
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
 
   const handleMouseDown = () => {
     setIsDragging(true);
@@ -96,10 +109,16 @@ function App() {
 
           <div className="flex-1 flex flex-col min-w-0">
             <header className="bg-blue-600 text-white px-6 py-4 shadow-lg">
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold text-yellow-400">
                   Product Management System
                 </h1>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+                >
+                  Logout
+                </button>
               </div>
             </header>
 
