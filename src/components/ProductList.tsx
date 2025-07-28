@@ -41,21 +41,21 @@ const ProductList: React.FC = () => {
 
   // Export all barcodes
   const handleExportAllBarcodes = async () => {
-  try {
-    const response = await api.get('/get/all-products', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    try {
+      const response = await api.get('/get/all-products', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-    const allProducts = response.data;
-    await exportBarcodes(allProducts); // uses your utility
-  } catch (err) {
-    console.error('Failed to export all barcodes:', err);
-    alert('Failed to export barcodes.');
-  }
-};
+      const allProducts = response.data;
+      await exportBarcodes(allProducts); // uses your utility
+    } catch (err) {
+      console.error('Failed to export all barcodes:', err);
+      alert('Failed to export barcodes.');
+    }
+  };
 
 
-  
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -132,6 +132,18 @@ const ProductList: React.FC = () => {
 
   // if (loading) return <div className="text-center py-10">Loading...</div>;
   // if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
+
+  // Stop background scrolling when editproductmodal is open
+  useEffect(() => {
+    if (editingProduct) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [editingProduct]);
 
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden p-4 ">
@@ -295,8 +307,18 @@ const ProductList: React.FC = () => {
 
       {/* Edit Product Modal */}
       {editingProduct && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div
+          className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setEditingProduct(null); // Close modal if clicked on overlay
+            }
+          }}
+        >
+          <div
+            className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md"
+            onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
+          >
             <EditProductForm
               product={editingProduct}
               onCancel={() => setEditingProduct(null)}
