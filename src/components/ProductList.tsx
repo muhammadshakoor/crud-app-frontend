@@ -44,6 +44,14 @@ const ProductList: React.FC = () => {
     try {
       const response = await api.get('/get/all-products', {
         headers: { Authorization: `Bearer ${token}` },
+        params: {
+          name: nameFilter,
+          category: categoryFilter,
+          min_price: priceFilter,
+          min_stock: minStockFilter,
+          brand: brandFilter,
+          supplier: supplierFilter,
+        },
       });
 
       const allProducts = response.data;
