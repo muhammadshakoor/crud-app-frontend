@@ -13,13 +13,25 @@ const ViewProductModal: React.FC<ViewProductModalProps> = ({ product, onClose })
     React.useEffect(() => {
         document.body.style.overflow = 'hidden';
         return () => {
-            document.body.style.overflow = '';
+            document.body.style.overflow = 'auto';
         };
     }, []);
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full overflow-y-auto max-h-[70vh]">
+        // <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+        //     <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full overflow-y-auto max-h-[70vh]">
+        <div
+            className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50"
+            onClick={(e) => {
+                if (e.target === e.currentTarget) {
+                    onClose(); // Close modal if clicked on overlay
+                }
+            }}
+        >
+            <div
+                className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full overflow-y-auto max-h-[70vh]"
+                onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
+            >
                 <h2 className="text-2xl font-bold mb-4">Product Details</h2>
 
                 <div className="grid grid-cols-2 gap-4">
