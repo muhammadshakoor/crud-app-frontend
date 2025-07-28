@@ -36,7 +36,7 @@ const EditProductForm: React.FC<Props> = ({ product, onCancel, onUpdate }) => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4 mb-6">
+        <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4 <del>mb-6</del>">
             <h3 className="text-lg font-semibold">Edit Product</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

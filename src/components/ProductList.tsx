@@ -282,7 +282,7 @@ const ProductList: React.FC = () => {
         />
       )}
 
-      {editingProduct && (
+      {/* {editingProduct && (
         <EditProductForm
           product={editingProduct}
           onCancel={() => setEditingProduct(null)}
@@ -291,6 +291,22 @@ const ProductList: React.FC = () => {
             fetchProducts();
           }}
         />
+      )} */}
+
+      {/* Edit Product Modal */}
+      {editingProduct && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+            <EditProductForm
+              product={editingProduct}
+              onCancel={() => setEditingProduct(null)}
+              onUpdate={() => {
+                setEditingProduct(null);
+                fetchProducts();
+              }}
+            />
+          </div>
+        </div>
       )}
 
       {viewingProduct && (
