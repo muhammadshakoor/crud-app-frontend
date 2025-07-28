@@ -1,14 +1,16 @@
 import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import { AuthProvider } from './auth/AuthContext';
+import { AuthProvider, useAuth } from './auth/AuthContext'; // Added useAuth import
 import ProtectedRoute from './auth/ProtectedRoute';
 import ProductList from './components/ProductList';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import NotAuthorized from './pages/NotAuthorized';
 import Dashboard from './pages/Dashboard';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useNavigate } from 'react'; // Added useNavigate
 
 function App() {
+  const { logout } = useAuth(); // Destructure logout from useAuth
+  const navigate = useNavigate(); // Use useNavigate hook
   const [sidebarWidth, setSidebarWidth] = useState(220); // Default width in pixels
   const [isDragging, setIsDragging] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -95,12 +97,21 @@ function App() {
           </aside>
 
           <div className="flex-1 flex flex-col min-w-0">
-            <header className="bg-blue-600 text-white px-6 py-4 shadow-lg">
+            <header className="bg-blue-600 text-white px-6 py-4 shadow-lg flex justify-between items-center">
               <div className="flex items-center justify-center">
                 <h1 className="text-3xl font-bold text-yellow-400">
                   Product Management System
                 </h1>
               </div>
+              <button
+                onClick={() => {
+                  logout();
+                  navigate('/login');
+                }}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200"
+              >
+                Logout
+              </button>
             </header>
 
             <main className="flex-1 overflow-auto bg-white">
@@ -120,7 +131,10 @@ function App() {
                     path="/"
                     element={
                       <ProtectedRoute allowedRoles={['admin', 'user']}>
-                        <ProductList />
+                        <ProductList onLogout={() => {
+                          logout();
+                          navigate('/login');
+                        }} />
                       </ProtectedRoute>
                     }
                   />
