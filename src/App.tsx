@@ -1,13 +1,12 @@
-import { BrowserRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
-import { AuthProvider } from './auth/AuthContext';
-import ProtectedRoute from './auth/ProtectedRoute';
-import ProductList from './components/ProductList';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import NotAuthorized from './pages/NotAuthorized';
-import Dashboard from './pages/Dashboard';
-import { useState, useRef, useEffect } from 'react';
-
+import { Routes, Route, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "./auth/AuthContext";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import ProductList from "./components/ProductList";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import NotAuthorized from "./pages/NotAuthorized";
+import Dashboard from "./pages/Dashboard";
+import { useState, useRef, useEffect } from "react";
 
 function App() {
   const [sidebarWidth, setSidebarWidth] = useState(220); // Default width in pixels
@@ -15,15 +14,25 @@ function App() {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
 
+  // Menu button on sidebar
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const { logout, token, role } = useAuth();
+  const navigate = useNavigate();
+
   const handleMouseDown = () => {
     setIsDragging(true);
-    document.body.style.cursor = 'col-resize';
-    document.body.style.userSelect = 'none';
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
   };
 
   const handleMouseMove = (e: MouseEvent) => {
     if (isDragging && sidebarRef.current) {
-      const newWidth = e.clientX - sidebarRef.current.getBoundingClientRect().left;
+      const newWidth =
+        e.clientX - sidebarRef.current.getBoundingClientRect().left;
       if (newWidth >= 180 && newWidth <= 400) {
         setSidebarWidth(newWidth);
       }
@@ -32,107 +41,144 @@ function App() {
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
   };
 
   useEffect(() => {
     if (isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
     }
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
     };
   }, [isDragging]);
 
   return (
-    <AuthProvider>
-      <Router>
-        <div className="flex min-h-screen bg-gray-100">
-          <aside
-            ref={sidebarRef}
-            className="bg-teal-700 text-white flex-shrink-0 relative"
-            style={{ width: `${sidebarWidth}px` }}
-          >
-            <div className="p-4 h-full overflow-y-auto">
-              <nav>
-                <ul className="space-y-2">
-                  <li>
-                    <NavLink
-                      to="/dashboard"
-                      className={({ isActive }) =>
-                        `flex items-center p-3 rounded-lg hover:bg-teal-600 ${
-                          isActive ? 'bg-teal-800 border-l-4 border-teal-300' : ''
-                        }`
-                      }
-                    >
-                      <span className="mr-3 text-lg">📊</span>
-                      <span className="font-medium">Dashboard</span>
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/"
-                      className={({ isActive }) =>
-                        `flex items-center p-3 rounded-lg hover:bg-teal-600 ${
-                          isActive ? 'bg-teal-800 border-l-4 border-teal-300' : ''
-                        }`
-                      }
-                    >
-                      <span className="mr-3 text-lg">📦</span>
-                      <span className="font-medium">Products Inventory</span>
-                    </NavLink>
-                  </li>
-                </ul>
-              </nav>
-            </div>
-            <div
-              ref={dragRef}
-              onMouseDown={handleMouseDown}
-              className="absolute right-0 top-0 w-1 h-full cursor-col-resize bg-teal-800 hover:bg-teal-500"
-            />
-          </aside>
-
-          <div className="flex-1 flex flex-col min-w-0">
-            <header className="bg-blue-600 text-white px-6 py-4 shadow-lg">
-              <div className="flex items-center justify-center">
-                <h1 className="text-3xl font-bold text-yellow-400">
-                  Product Management System
-                </h1>
-              </div>
-            </header>
-
-            <main className="flex-1 overflow-auto bg-white">
-              <div className="container mx-auto p-6">
-                <Routes>
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route
-                    path="/dashboard"
-                    element={
-                      <ProtectedRoute allowedRoles={['admin', 'user']}>
-                        <Dashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="/"
-                    element={
-                      <ProtectedRoute allowedRoles={['admin', 'user']}>
-                        <ProductList />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route path="/not-authorized" element={<NotAuthorized />} />
-                </Routes>
-              </div>
-            </main>
+    <div className="flex min-h-[calc(100vh-4rem)]">
+      {/* Sidebar */}
+      {isSidebarOpen && (
+        <aside
+          ref={sidebarRef}
+          className="bg-teal-700 text-white flex-shrink-0 relative transition-all duration-300"
+          style={{ width: `${sidebarWidth}px` }}
+        >
+          {/* Menu Button inside Sidebar */}
+          <div className="flex justify-end p-2">
+            <button
+              onClick={toggleSidebar}
+              className="text-white bg-teal-800 hover:bg-teal-600 p-2 rounded"
+              title="Hide Menu"
+            >
+              ❌
+            </button>
           </div>
-        </div>
-      </Router>
-    </AuthProvider>
+
+          <div className="p-4 h-full overflow-y-auto">
+            <nav>
+              <ul className="space-y-2">
+                <li>
+                  <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) =>
+                      `flex items-center p-3 rounded-lg hover:bg-teal-600 ${isActive ? "bg-teal-800 border-l-4 border-teal-300" : ""
+                      }`
+                    }
+                  >
+                    <span className="mr-3 text-lg">📊</span>
+                    <span className="font-medium">Dashboard</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      `flex items-center p-3 rounded-lg hover:bg-teal-600 ${isActive ? "bg-teal-800 border-l-4 border-teal-300" : ""
+                      }`
+                    }
+                  >
+                    <span className="mr-3 text-lg">📦</span>
+                    <span className="font-medium">Products Inventory</span>
+                  </NavLink>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          {/* Drag Handle */}
+          <div
+            ref={dragRef}
+            onMouseDown={handleMouseDown}
+            className="absolute right-0 top-0 w-1 h-full cursor-col-resize bg-teal-800 hover:bg-teal-500"
+          />
+        </aside>
+      )}
+
+      {/* Toggle Button (when sidebar is hidden) */}
+      {!isSidebarOpen && (
+        <button
+          onClick={toggleSidebar}
+          className="fixed top-20 left-4 z-50 bg-teal-700 text-white p-2 rounded hover:bg-teal-600 shadow-md"
+          title="Open Menu"
+        >
+          ☰
+        </button>
+      )}
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <header className={`bg-blue-600 text-white px-6 py-4 shadow-lg transition-all duration-300 ${!isSidebarOpen ? "pl-16" : ""}`}>
+          <div className="flex items-center justify-center relative">
+            <h1 className="text-3xl font-bold text-yellow-400">
+              Product Management System
+            </h1>
+
+            {/* Logout */}
+            {token && (role === "admin" || role === "user") && (
+              <button
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition duration-200 absolute right-0"
+              >
+                Logout
+              </button>
+            )}
+          </div>
+        </header>
+
+        {/* Routes */}
+        <main className="flex-1 overflow-auto bg-white">
+          <div className="container mx-auto p-6">
+            <Routes>
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "user"]}>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute allowedRoles={["admin", "user"]}>
+                    <ProductList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/not-authorized" element={<NotAuthorized />} />
+            </Routes>
+          </div>
+        </main>
+      </div>
+    </div>
   );
 }
 
@@ -154,7 +200,7 @@ export default App;
 //   let lastExecTime = 0;
 //   return function (...args: any[]) {
 //     const currentTime = Date.now();
-    
+
 //     if (currentTime - lastExecTime > delay) {
 //       func(...args);
 //       lastExecTime = currentTime;
@@ -205,7 +251,7 @@ export default App;
 //       document.addEventListener('mousemove', handleMouseMove);
 //       document.addEventListener('mouseup', handleMouseUp);
 //     }
-    
+
 //     return () => {
 //       document.removeEventListener('mousemove', handleMouseMove);
 //       document.removeEventListener('mouseup', handleMouseUp);
@@ -303,13 +349,13 @@ export default App;
 //                 <Routes>
 //                   <Route path="/signup" element={<Signup />} />
 //                   <Route path="/login" element={<Login />} />
-//                   <Route 
-//                     path="/dashboard" 
+//                   <Route
+//                     path="/dashboard"
 //                     element={
 //                       <ProtectedRoute allowedRoles={['admin', 'user']}>
 //                         <Dashboard />
 //                       </ProtectedRoute>
-//                     } 
+//                     }
 //                   />
 //                   <Route
 //                     path="/"
@@ -338,7 +384,6 @@ export default App;
 // }
 
 // export default App;
-
 
 // // import React from 'react';
 // import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
