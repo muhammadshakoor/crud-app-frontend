@@ -374,7 +374,7 @@ const ProductList: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {products.length > 0 ? (
+            {products?.length > 0 ? (
               products.map(product => (
                 <tr key={product.id} className="hover:bg-gray-100 transition-colors duration-200 border">
                   <td className="px-4 py-2">{product.name || 'N/A'}</td>
